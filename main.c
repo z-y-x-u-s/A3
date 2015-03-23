@@ -4,6 +4,51 @@
 
 /** Henry Jason Biem 260590556 **/
 
+typedef struct NODE
+{
+        int value;
+        struct NODE* next;
+} aNode;
+
+aNode* root;
+int i = 0;
+
+void add(int input)
+{
+        if(i == 0)
+        {
+                root = (aNode *) malloc(sizeof(aNode));
+                root-> next = NULL;
+        }
+        i++;
+
+        aNode* newNode;
+        aNode* freeSpot;
+
+        newNode = (aNode *) malloc(sizeof(aNode));
+        newNode -> value= input;
+        newNode -> next = NULL;
+
+        freeSpot = root;
+        while(freeSpot->next != NULL)
+        {
+                freeSpot = freeSpot->next;
+        }
+        freeSpot->next = newNode;
+}
+
+void prettyPrint()
+{
+        aNode* printHere;
+        printHere = root->next;
+        printf("Content of list is :");
+        while(printHere != NULL)
+        {
+                printf(" %i ", printHere->value);
+                printHere = printHere->next;
+        }
+}
+
 int main(int argc, char *argv[])
 {
         FILE *file_ptr, *file_ptr2;
@@ -13,7 +58,7 @@ int main(int argc, char *argv[])
         char lineReading[500];
         int readNumber;
         int fileLineLength;
-        int i;
+        int j;
         do {
                 printf("Please provide a valid filepath with the proper extension to be opened: \n");
                 scanf("%499[^\n]", filename);
@@ -28,7 +73,7 @@ int main(int argc, char *argv[])
 
         } while (file_ptr ==NULL);
 
-        i=0;
+        j=0;
         strcpy(lineReading, "wc -l < ");
         strcat(lineReading, filename);
         strcat(lineReading, " > LineNumber.txt");
@@ -38,13 +83,14 @@ int main(int argc, char *argv[])
         fileLineLength = atoi(beingCareful);
         fclose(file_ptr2);
         printf("%d \n \n", fileLineLength);
-        
+
         while(!feof(file_ptr))
-        {    
+        {
         fgets(beingCareful, 499, file_ptr);
         readNumber= atoi(beingCareful);
-        printf("%d\n", readNumber);
-        i++;
-        if(i==fileLineLength) break; 
+        add(readNumber);
+        j++;
+        if(j==fileLineLength) break;
         }
-}   
+        prettyPrint();
+}
