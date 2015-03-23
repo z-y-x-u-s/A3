@@ -73,11 +73,20 @@ BOOLEAN delete(int input)
         newNode =(struct NODE*) find(input);
         if(newNode == NULL) return FALSE;
         else
-        {
-                nextNewNode = newNode -> next;
-                newNode->value = nextNewNode-> value;
-                newNode->next = nextNewNode -> next;
-                free(nextNewNode);
+        {       if(newNode->next !=NULL)
+                {
+                        nextNewNode = newNode -> next;
+                        newNode->value = nextNewNode-> value;
+                        newNode->next = nextNewNode -> next;
+                        free(nextNewNode);
+                }
+                else
+                {
+                        nextNewNode= root;
+                        while((nextNewNode->next)->next != NULL) nextNewNode= nextNewNode->next;
+                        nextNewNode->next= NULL;
+                }
+
         }
 return TRUE;
 }
@@ -115,7 +124,6 @@ int main(int argc, char *argv[])
         fgets(beingCareful, 499, file_ptr2);
         fileLineLength = atoi(beingCareful);
         fclose(file_ptr2);
-        //printf("%d \n \n", fileLineLength);
 
         while(!feof(file_ptr))
         {
@@ -130,23 +138,29 @@ int main(int argc, char *argv[])
 
         do
         {
-                printf("What integer would you like to be removed? The first one found will be deleted \n");
+                printf("What integer would you like to be removed? The first one found will be deleted: \n");
                 boolean=0;
                 scanf("%499[^\n]", beingCareful);
                 readNumber= atoi(beingCareful);
                 garbage=getchar();
 
-                if(delete(readNumber)) prettyPrint();
-                else
+                if(delete(readNumber))
                 {
-                        printf("Number not found!");
+                        printf("NUMBER WAS DELETED! \n");
+                        prettyPrint();
                 }
 
-                printf("Would you like to delete another number? \n");
+                else
+                {
+                        printf("NUMBER WAS NOT FOUND! \n");
+                        prettyPrint();
+                }
+
+                printf("Would you like to delete another number? Enter either Y, y, Yes, YES, or yes. \n");
                 scanf("%499[^\n]", answer);
                 garbage=getchar();
 
-                /*If the inputed string matches one of the 4 answers, the boolean variable is set to true (+1) */
+                /*If the inputed string matches one of the 5 answers, the boolean variable is set to true (+1) */
                 switch(strlen(answer))
                 {
                         case 1:
@@ -154,7 +168,7 @@ int main(int argc, char *argv[])
                         break;
 
                         case 3:
-                        if (strcmp("YES", answer) == 0 || strcmp("yes", answer) == 0 || strcmp("Yes", answer))  boolean = 1;
+                        if (strcmp("YES", answer) == 0 || strcmp("yes", answer) == 0 || strcmp("Yes", answer) ==0)  boolean = 1;
                         break;
 
                         default:
